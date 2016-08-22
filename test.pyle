@@ -1,0 +1,29 @@
+body:
+    color black
+    width 75%
+    margin-top 20px
+    display block
+
+span:
+    font-size 20px
+    color red
+
+h1:
+    .red:
+        color red
+    .blue:
+        color blue
+    .green:
+        .large:
+            color green
+            font-size 30px
+    .orange:
+        &before:
+            text-decoration underline
+
+div:
+    color blue
+    balls:
+        color green
+        tickets:
+            color purple

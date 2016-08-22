@@ -1,0 +1,51 @@
+ body { 
+    color black
+
+    width 75%
+
+    margin-top 20px
+
+    display block
+
+ } 
+ span { 
+    font-size 20px
+
+    color red
+
+ } 
+ h1 { 
+
+ } 
+ h1     .red { 
+        color red
+
+ } 
+ h1     .red     .blue { 
+        color blue
+
+ } 
+ h1     .red     .blue     .green { 
+
+ } 
+ h1     .red     .blue     .green         .large { 
+            color green
+
+            font-size 30px
+
+ } 
+ h1     .red     .blue     .green         .large     .orange { 
+
+ } 
+ h1     .red     .blue     .green         .large     .orange         &before { 
+            text-decoration underline
+
+ } 
+ div { 
+    color blue
+
+ } 
+ div     balls { 
+        color green
+
+ } 
