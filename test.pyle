@@ -18,12 +18,12 @@ h1:
             color green
             font-size 30px
     .orange:
-        &before:
+        ::before:
             text-decoration underline
 
 div:
     color blue
-    balls:
+    .balls:
         color green
-        tickets:
+        .tickets:
             color purple
