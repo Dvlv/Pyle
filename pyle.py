@@ -51,8 +51,20 @@ def write_css_dec(prev_selectors, prev_styles):
 
     #print selector chain
     selector_string = ''
+    double_close = False
     for selector in prev_selectors:
-        if selector[0].strip().startswith('.') or selector[0].strip().startswith('#') or selector[0].strip().startswith(':'):
+        if selector[0].strip().startswith('@media'):
+            my_spaces = num_of_spaces(selector[0])
+            width = selector[0].strip().split()[1]
+            if width == 'mobile':
+                selector[0] = (' '*my_spaces) + '@media (max-width: 420px)'
+            elif width == 'tablet':
+                selector[0] = (' '*my_spaces) + '@media (max-width: 800px)'
+            elif width.isdigit():
+                selector[0] = (' '*my_spaces) + '@media (max-width: ' + width +'px)'
+            selector_string = selector[0].strip() + ' {\n ' + selector_string
+            double_close = True
+        elif selector[0].strip().startswith('.') or selector[0].strip().startswith('#') or selector[0].strip().startswith(':'):
             selector_string += selector[0].strip()
         else:
             selector_string = selector_string + ' ' + selector[0].strip()
@@ -62,14 +74,18 @@ def write_css_dec(prev_selectors, prev_styles):
     #print style chain
     corrected_styles = []
     for style in prev_styles:
-        halves = re.search(STYLE_REGEX, style)
-        if halves.group(0) is not None:
-            secondHalf = style[len(halves.group(0)):]
+        halves = re.match(STYLE_REGEX, style)
+        if halves is not None:
+            secondHalf = style[len(halves.group(0)):-1]
             firstHalf = '  ' + halves.group(0).strip()
-            corrected_styles.append(firstHalf + ': ' + secondHalf)
+            if double_close:
+                firstHalf = '  ' + firstHalf
+            corrected_styles.append(firstHalf + ': ' + secondHalf + ';\n')
 
     style_string = ''.join(corrected_styles)
     end_string = '} \n'
+    if double_close:
+        end_string = '  }\n' + end_string
 
     CSS_FILE.write(selector_string + style_string + end_string)
 

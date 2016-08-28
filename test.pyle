@@ -13,10 +13,17 @@ h1:
         color red
     .blue:
         color blue
+        @media mobile:
+            color navy
+        @media tablet:
+            color cyan 
+        @media 69:
+            color aqua
     .green:
         .large:
             color green
             font-size 30px
+            -webkit-filter 1px solid grey
     .orange:
         ::before:
             text-decoration underline
