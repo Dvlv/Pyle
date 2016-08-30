@@ -21,17 +21,6 @@ def num_of_spaces(line):
 
     return num_spaces
 
-def handle_selector_line():
-    pass
-
-
-def handle_style_line(line):
-    pass
-
-
-def end_selectors(num, num_tabs=None):
-    pass
-
 def write_css_dec(prev_selectors, prev_styles):
   #remove prev selectors with equal or more indents
     my_spaces = num_of_spaces(prev_selectors[-1][0])
