@@ -1,0 +1,7 @@
+.twilight:
+    color black
+    background white
+    .vampire:
+        color red
+    .bree:
+        color blue
