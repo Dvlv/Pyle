@@ -20,7 +20,7 @@ h1:
         @media 69:
             color aqua
     .green:
-        .large:
+        &.large:
             color green
             font-size 30px
             -webkit-filter 1px solid grey

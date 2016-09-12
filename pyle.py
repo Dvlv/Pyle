@@ -53,8 +53,9 @@ def write_css_dec(prev_selectors, prev_styles):
                 selector[0] = (' '*my_spaces) + '@media (max-width: ' + width +'px)'
             selector_string = selector[0].strip() + ' {\n ' + selector_string
             double_close = True
-        elif selector[0].strip().startswith('.') or selector[0].strip().startswith('#') or selector[0].strip().startswith(':'):
-            selector_string += selector[0].strip()
+        elif selector[0].strip().startswith('&') or selector[0].strip().startswith(':'):
+            noAmp = selector[0].strip().replace('&','')
+            selector_string += noAmp
         else:
             selector_string = selector_string + ' ' + selector[0].strip()
     selector_string = selector_string.strip()
@@ -110,13 +111,21 @@ def compile(filename):
                     prev_styles.append(line)
                     prev_line = 'style'
 
-    return prev_selectors, prev_styles
+    if prev_selectors and prev_styles:
+        if not prev_styles[-1].endswith('\n'):
+            prev_styles[-1] = prev_styles[-1] + '\n'
+        write_css_dec(prev_selectors, prev_styles)
+
+def parse_main(main_file):
+    file_queue = []
+    with open(main_file, 'r') as mf:
+        for line in mf:
+            if line.startswith('@import'):
+                file_queue.append(line.split()[1])
+    return file_queue
 
 
+for pyleFile in parse_main(sys.argv[1]):
+    compile(pyleFile)
 
-prev_selectors, prev_styles = compile(sys.argv[1])
-if prev_selectors and prev_styles:
-    if not prev_styles[-1].endswith('\n'):
-        prev_styles[-1] = prev_styles[-1] + '\n'
-    write_css_dec(prev_selectors, prev_styles)
 CSS_FILE.close()
