@@ -56,3 +56,9 @@ div .balls .tickets {
 .twilight .bree { 
   color: blue;
 } 
+.twilight.moonlight { 
+  color: grey;
+} 
+.twilight.moonlight .sunset { 
+  color: orange;
+} 
