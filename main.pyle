@@ -1,2 +1,2 @@
-@import test.pyle
-@import test2.pyle
+@import examples/test.pyle
+@import examples/test2.pyle
