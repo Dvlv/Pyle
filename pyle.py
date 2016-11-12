@@ -90,7 +90,7 @@ def compile(filename):
     with open(filename, 'r') as open_file:
         for line in open_file:
             if not first_line and indent_width == 0:
-                    indent_width = num_of_spaces(line)
+                indent_width = num_of_spaces(line)
             if first_line:
                 first_line = False
 
@@ -117,12 +117,10 @@ def compile(filename):
         write_css_dec(prev_selectors, prev_styles)
 
 def parse_main(main_file):
-    file_queue = []
     with open(main_file, 'r') as mf:
         for line in mf:
             if line.startswith('@import'):
-                file_queue.append(line.split()[1])
-    return file_queue
+                yield line.split()[1]
 
 
 for pyleFile in parse_main(sys.argv[1]):
