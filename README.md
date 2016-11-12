@@ -39,6 +39,8 @@ html body span.red {
 }
 ```
 
+See the examples folder for a detailed example
+
 ##Importing
 - Pyle requires a main.pyle file with a list of .pyle files to parse
 - You can create multiple files and import them all in your main.pyle file with `@import filename.pyle` (one per line)
