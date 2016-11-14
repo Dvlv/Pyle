@@ -51,13 +51,17 @@ See the examples folder for a detailed example
 - Include style.css in your html as usual
 
 ##Running
-`python3 pyle.py main.pyle`
+`python3 pyle.py`
+
+####Optional Arguments
+- The name of your main file (with all of your imports, defaults to `main.pyle`)
+- `-f <filename>` custom output file for the css (defaults to style.css)
+- eg `python3 pyle.py imports.pyle -f styling.css`
 
 ##Advanced syntax
 - `@media mobile`, `@media tablet`, `@media <number>` allow for mobile (max-width 420) and tablet (max-width 800) selectors, or a custom number.
 - `::before` and `::after` allow for before and after pseudo-elements
 
 ###TODO
-- Arbitrary css filename
 - Loops
 - Animation keyframe creating
