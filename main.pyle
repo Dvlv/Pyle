@@ -1,2 +1,4 @@
+def orange #ff6600
+def yellow #ffff00
 @import examples/test.pyle
 @import examples/test2.pyle

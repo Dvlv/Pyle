@@ -2,10 +2,10 @@
     color black
     background white
     .vampire:
-        color red
+        color @yellow
     .bree:
         color blue
     &.moonlight:
         color grey
         .sunset:
-            color orange
+            color @orange
