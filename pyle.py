@@ -23,15 +23,15 @@ def num_of_spaces(line):
 
 def write_css_dec(prev_selectors, prev_styles):
   #remove prev selectors with equal or more indents
-    my_spaces = num_of_spaces(prev_selectors[-1][0])
+    my_spaces = num_of_spaces(prev_selectors[-1])
     for old_select in prev_selectors[:-1]:
-        if num_of_spaces(old_select[0]) >= my_spaces:
+        if num_of_spaces(old_select) >= my_spaces:
             prev_selectors.remove(old_select)
 
     #now fix double nesting
     prev_spaces = 999999999999
     for selector in reversed(prev_selectors):
-        my_spaces = num_of_spaces(selector[0])
+        my_spaces = num_of_spaces(selector)
         if my_spaces < prev_spaces:
             prev_spaces = my_spaces
         else:
@@ -42,24 +42,24 @@ def write_css_dec(prev_selectors, prev_styles):
     selector_string = ''
     double_close = False
     for selector in prev_selectors:
-        if selector[0].strip().startswith('@media'):
-            my_spaces = num_of_spaces(selector[0])
-            width = selector[0].strip().split()[1]
+        if selector.strip().startswith('@media'):
+            my_spaces = num_of_spaces(selector)
+            width = selector.strip().split()[1]
             if width == 'mobile':
-                selector[0] = (' '*my_spaces) + '@media (max-width: 420px)'
+                selector = (' '*my_spaces) + '@media (max-width: 420px)'
             elif width == 'tablet':
-                selector[0] = (' '*my_spaces) + '@media (max-width: 800px)'
+                selector = (' '*my_spaces) + '@media (max-width: 800px)'
             elif width.isdigit():
-                selector[0] = (' '*my_spaces) + '@media (max-width: ' + width +'px)'
-            selector_string = selector[0].strip() + ' {\n ' + selector_string
+                selector = (' '*my_spaces) + '@media (max-width: ' + width +'px)'
+            selector_string = selector.strip() + ' {\n ' + selector_string
             double_close = True
-        elif selector[0].strip().startswith('&') or selector[0].strip().startswith(':'):
-            noAmp = selector[0].strip().replace('&','')
+        elif selector.strip().startswith('&') or selector.strip().startswith(':'):
+            noAmp = selector.strip().replace('&','')
             selector_string += noAmp
         else:
-            selector_string = selector_string + ' ' + selector[0].strip()
+            selector_string = selector_string + ' ' + selector.strip()
     selector_string = selector_string.strip()
-    selector_string += ' { \n'
+    selector_string += ' {\n'
 
     #print style chain
     corrected_styles = []
@@ -73,7 +73,7 @@ def write_css_dec(prev_selectors, prev_styles):
             corrected_styles.append(style_type + ': ' + style_value + ';\n')
 
     style_string = ''.join(corrected_styles)
-    end_string = '} \n'
+    end_string = '}\n'
     if double_close:
         end_string = '  }\n' + end_string
 
@@ -100,7 +100,7 @@ def compile(filename):
                     write_css_dec(prev_selectors, prev_styles)
                     prev_styles = []
                 selector_string = line[:-2]
-                prev_selectors.append([selector_string, num_of_spaces(line)])
+                prev_selectors.append(selector_string)
                 prev_line = 'selector'
             elif line == '\n':
                 write_css_dec(prev_selectors, prev_styles)

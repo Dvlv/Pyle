@@ -1,64 +1,67 @@
-body { 
+html {
+  padding: 20px;
+}
+body {
   color: black;
   width: 75%;
   margin-top: 20px;
   display: block;
-} 
-span { 
+}
+span {
   font-size: 20px;
   color: red;
-} 
-h1 .red { 
+}
+h1 .red {
   color: red;
-} 
-h1 .blue { 
+}
+h1 .blue {
   color: blue;
-} 
+}
 @media (max-width: 420px) {
-  h1 .blue { 
+  h1 .blue {
     color: navy;
   }
-} 
+}
 @media (max-width: 800px) {
-  h1 .blue { 
+  h1 .blue {
     color: cyan ;
   }
-} 
+}
 @media (max-width: 69px) {
-  h1 .blue { 
+  h1 .blue {
     color: aqua;
   }
-} 
-h1 .green.large { 
+}
+h1 .green.large {
   color: green;
   font-size: 30px;
   -webkit-filter: 1px solid grey;
-} 
-h1 .orange::before { 
+}
+h1 .orange::before {
   text-decoration: underline;
-} 
-div { 
+}
+div {
   color: blue;
-} 
-div .balls { 
+}
+div .balls {
   color: green;
-} 
-div .balls .tickets { 
+}
+div .balls .tickets {
   color: purple;
-} 
-.twilight { 
+}
+.twilight {
   color: black;
   background: white;
-} 
-.twilight .vampire { 
+}
+.twilight .vampire {
   color: red;
-} 
-.twilight .bree { 
+}
+.twilight .bree {
   color: blue;
-} 
-.twilight.moonlight { 
+}
+.twilight.moonlight {
   color: grey;
-} 
-.twilight.moonlight .sunset { 
+}
+.twilight.moonlight .sunset {
   color: orange;
-} 
+}
