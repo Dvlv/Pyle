@@ -55,7 +55,7 @@ See the examples folder for a detailed example
 
 ####Optional Arguments
 - The name of your main file (with all of your imports, defaults to `main.pyle`)
-- `-f <filename>` custom output file for the css (defaults to style.css)
+- `-f <filename>.css` custom output file for the css (defaults to style.css)
 - eg `python3 pyle.py imports.pyle -f styling.css`
 
 ##Advanced syntax
