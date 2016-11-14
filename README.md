@@ -47,8 +47,8 @@ See the examples folder for a detailed example
 - Your main.pyle file is only for importing other files, do not write any styling info in main.pyle
 
 ##Output
-- Pyle renders all styles to style.css
-- Include style.css in your html as usual
+- Pyle renders all styles to style.css, unless you specify a custom output file with `-f filename.css`
+- Include the generated css file in your html as usual
 
 ##Running
 `python3 pyle.py`
