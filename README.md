@@ -41,6 +41,8 @@ html body span.red {
 
 See the examples folder for detailed examples
 
+To compile the examples, use `python3 pyle.py -m examples/main.pyle -c examples/style.css`
+
 ##Importing
 - Pyle requires a main.pyle (or equivolent) file with a list of .pyle files to parse
 - Files are imported with `@import test.pyle`
