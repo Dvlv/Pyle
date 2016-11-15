@@ -6,6 +6,8 @@ COLON = ':\n'
 STYLE_REGEX = re.compile('\s*[\w\-]+\s')
 SPACES_REGEX = re.compile('^\s*')
 
+custom_vars = {}
+
 def is_selector(line):
     if line.endswith(COLON):
         return True
@@ -67,6 +69,8 @@ def write_css_dec(prev_selectors, prev_styles):
         halves = re.match(STYLE_REGEX, style)
         if halves is not None:
             style_value = style[len(halves.group(0)):-1]
+            if style_value in custom_vars:
+                style_value = custom_vars[style_value]
             style_type = '  ' + halves.group(0).strip()
             if double_close:
                 style_type = '  ' + style_type
@@ -117,9 +121,21 @@ def compile(filename):
         write_css_dec(prev_selectors, prev_styles)
 
 def parse_main(main_file):
+    global custom_vars
+
     with open(main_file, 'r') as mf:
-        for line in mf:
-            if line.startswith('@import'):
+        for index, line in enumerate(mf, start=1):
+            if line.startswith('def'):
+                var_pieces = line.split()
+                if len(var_pieces) == 3:
+                    custom_vars['@' + str(var_pieces[1])] = str(var_pieces[2])
+                else:
+                    if len(var_pieces) > 1:
+                        var_name = var_pieces[1]
+                        print('variable "{}" declared incorrectly, please use "def varname value"'.format(var_name))
+                    else:
+                        print('skipping empty def on line {}, please remove'.format(index))
+            elif line.startswith('@import'):
                 yield line.split()[1]
 
 def handle_args():

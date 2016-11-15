@@ -18,7 +18,7 @@ h1:
         @media mobile:
             color navy
         @media tablet:
-            color cyan 
+            color cyan
         @media 69:
             color aqua
     .green:
@@ -33,6 +33,6 @@ h1:
 div:
     color blue
     .balls:
-        color green
+        color @yellow
         .tickets:
-            color purple
+            color @orange
