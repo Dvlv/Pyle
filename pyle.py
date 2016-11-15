@@ -23,7 +23,7 @@ def num_of_spaces(line):
 
     return num_spaces
 
-def write_css_dec(prev_selectors, prev_styles):
+def write_css_dec(prev_selectors, prev_styles, CSS_FILE):
   #remove prev selectors with equal or more indents
     my_spaces = num_of_spaces(prev_selectors[-1])
     for old_select in prev_selectors[:-1]:
@@ -83,7 +83,7 @@ def write_css_dec(prev_selectors, prev_styles):
 
     CSS_FILE.write(selector_string + style_string + end_string)
 
-def compile(filename):
+def compile(filename, CSS_FILE):
     num_selectors = 0
     prev_line = None
     prev_spaces = 0
@@ -101,13 +101,13 @@ def compile(filename):
             if is_selector(line):
 #                    print('i am ' + line + ' before me was a ' + str(prev_line) + ' and my prev selects are ' + str(prev_selectors))
                 if (prev_line == 'style' or prev_line == 'blank') and len(prev_selectors) > 0:
-                    write_css_dec(prev_selectors, prev_styles)
+                    write_css_dec(prev_selectors, prev_styles, CSS_FILE)
                     prev_styles = []
                 selector_string = line[:-2]
                 prev_selectors.append(selector_string)
                 prev_line = 'selector'
             elif line == '\n':
-                write_css_dec(prev_selectors, prev_styles)
+                write_css_dec(prev_selectors, prev_styles, CSS_FILE)
                 prev_selectors = []
                 prev_styles = []
                 prev_line = 'blank'
@@ -118,7 +118,7 @@ def compile(filename):
     if prev_selectors and prev_styles:
         if not prev_styles[-1].endswith('\n'):
             prev_styles[-1] = prev_styles[-1] + '\n'
-        write_css_dec(prev_selectors, prev_styles)
+        write_css_dec(prev_selectors, prev_styles, CSS_FILE)
 
 def parse_main(main_file):
     global custom_vars
@@ -146,11 +146,15 @@ def handle_args():
 
     return args
 
-args = handle_args()
+def main():
+    args = handle_args()
 
-CSS_FILE = open(args.css_file, 'w')
+    CSS_FILE = open(args.css_file, 'w')
 
-for pyle_file in parse_main(args.main_file):
-    compile(pyle_file)
+    for pyle_file in parse_main(args.main_file):
+        compile(pyle_file, CSS_FILE)
 
-CSS_FILE.close()
+    CSS_FILE.close()
+
+if __name__ == '__main__':
+    main()

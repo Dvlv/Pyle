@@ -1,5 +1,5 @@
 html:
-    padding 20px
+    padding 10px
 body:
     color black
     width 75%
