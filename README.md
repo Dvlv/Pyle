@@ -53,6 +53,12 @@ See the examples folder for detailed examples
 ##Running
 `python3 pyle.py`
 
+Or mark it as executable `chmod +x pyle.py`
+
+Then you can just run
+
+`./pyle.py`
+
 ####Optional Arguments
 - The name of your main file (with all of your imports, defaults to `main.pyle`)
 - `-f <filename>.css` custom output file for the css (defaults to style.css)
