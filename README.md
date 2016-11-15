@@ -49,7 +49,7 @@ See the examples folder for detailed examples
 - Your main.pyle file is only for importing other files and defining variables, do not write any styling info in main.pyle
 
 ##Output
-- Pyle renders all styles to style.css, unless you specify a custom output file with `-f filename.css`
+- Pyle renders all styles to style.css, unless you specify a custom output file with `-c filename.css`
 - Include the generated css file in your html as usual
 
 ##Running
@@ -61,15 +61,15 @@ Then you can just run
 
 `./pyle.py`
 
-####Optional Arguments
-- The name of your main file (with all of your imports, defaults to `main.pyle`)
-- `-f <filename>.css` custom output file for the css (defaults to style.css)
+###Optional Arguments
+- `-m <filename>.pyle` The name of your main file (with all of your imports, defaults to `main.pyle`)
+- `-c <filename>.css` custom output file for the css (defaults to style.css)
 
 ####Examples 
 - `python3 pyle.py` Imports stylesheets and variables listed in `main.pyle` and writes to `style.css`
-- `python3 pyle.py imports.pyle` Imports stylesheets and variables listed in `imports.pyle` and writes to `style.css`
-- `python3 pyle.py site.css` Imports stylesheets and variables in `main.pyle` (as default) and writes to `site.css`
-- `python3 imports.pyle -f site.css` Imports stylesheets and variables in `imports.pyle` and writes to `site.css`
+- `python3 pyle.py -m imports.pyle` Imports stylesheets and variables listed in `imports.pyle` and writes to `style.css`
+- `python3 pyle.py -c site.css` Imports stylesheets and variables in `main.pyle` (as default) and writes to `site.css`
+- `python3 pyle.py -m imports.pyle -c site.css` Imports stylesheets and variables in `imports.pyle` and writes to `site.css`
 
 ##Advanced syntax
 ####Media queries
