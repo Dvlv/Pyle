@@ -1,8 +1,8 @@
 import sys
 import re
+import argparse
 
 COLON = ':\n'
-CSS_FILE = open('style.css', 'w')
 STYLE_REGEX = re.compile('\s*[\w\-]+\s')
 SPACES_REGEX = re.compile('^\s*')
 
@@ -122,8 +122,20 @@ def parse_main(main_file):
             if line.startswith('@import'):
                 yield line.split()[1]
 
+def handle_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--main_file', help='Your main file which imports your individual styling files (default main.pyle)', type=str, default="main.pyle")
+    #parser.add_argument('-f', '--css_file', help='the name of the css file to write to (default style.css)', type=str)
+    parser.add_argument('-f', '--css_file', help='The name of the css file to write to (default style.css)', type=str, default="style.css")
+    args = parser.parse_args()
 
-for pyleFile in parse_main(sys.argv[1]):
-    compile(pyleFile)
+    return args
+
+args = handle_args()
+
+CSS_FILE = open(args.css_file, 'w')
+
+for pyle_file in parse_main(args.main_file):
+    compile(pyle_file)
 
 CSS_FILE.close()
