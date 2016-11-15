@@ -141,8 +141,8 @@ def parse_main(main_file):
 
 def handle_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--main_file', help='Your main file which imports your individual styling files (default main.pyle)', type=str, default="main.pyle")
-    parser.add_argument('-f', '--css_file', help='The name of the css file to write to (default style.css)', type=str, default="style.css")
+    parser.add_argument('-m','--main_file', help='Your main file which imports your individual styling files (default main.pyle)', type=str, default="main.pyle")
+    parser.add_argument('-c', '--css_file', help='The name of the css file to write to (default style.css)', type=str, default="style.css")
     args = parser.parse_args()
 
     return args
