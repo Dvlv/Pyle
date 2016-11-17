@@ -97,3 +97,4 @@ above, `bright-yellow` and `darker-yellow` can both use the `@yellow` variable, 
 - Loops
 - Animation keyframe creating
 - Minified CSS
+- Proper error handling
