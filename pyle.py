@@ -64,7 +64,7 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
                 else:
                     selector = (' '*my_spaces) + '@media (max-width: ' + width + 'px)'
             if minified:
-                selector_string = selector.strip() + '{' + selector_string
+                selector_string = selector.strip() + '{' + selector_string.strip()
             else:
                 selector_string = selector.strip() + ' {\n ' + selector_string
             double_close = True
@@ -72,10 +72,7 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
             noAmp = selector.strip().replace('&','')
             selector_string += noAmp
         else:
-            if minified and len(selector_string) > 0 and selector_string[-1] == '{':
-                selector_string = selector_string + selector.strip()
-            else:
-                selector_string = selector_string + ' ' + selector.strip()
+            selector_string = selector_string + ' ' + selector.strip()
     selector_string = selector_string.strip()
     if minified:
         selector_string += '{'
