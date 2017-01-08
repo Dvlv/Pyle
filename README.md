@@ -44,7 +44,7 @@ See the examples folder for detailed examples
 To compile the examples, use `python3 pyle.py -m examples/main.pyle -c examples/style.css`
 
 ##Importing
-- Pyle requires a main.pyle (or equivolent) file with a list of .pyle files to parse
+- Pyle requires a main.pyle (or equivalent) file with a list of .pyle files to parse
 - Files are imported with `@import test.pyle`
 - You can create multiple .pyle files and import them all in your main.pyle file with `@import filename.pyle` (one per line)
 - Variables can be declared in your main.pyle file with `def orange #ff6600` (see *Advanced Syntax* below)
