@@ -102,9 +102,15 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
                 corrected_styles.append(style_type + ': ' + style_value + ';\n')
 
     style_string = ''.join(corrected_styles)
-    end_string = '}\n'
+    if minified:
+        end_string = '}'
+    else:
+        end_string = '}\n'
     if double_close:
-        end_string = '  }\n' + end_string
+        if minified:
+            end_string = '}' + end_string
+        else:
+            end_string = '  }\n' + end_string
 
     CSS_FILE.write(selector_string + style_string + end_string)
 
