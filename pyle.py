@@ -24,7 +24,7 @@ def num_of_spaces(line):
 
     return num_spaces
 
-def write_css_dec(prev_selectors, prev_styles, CSS_FILE):
+def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
   #remove prev selectors with equal or more indents
     my_spaces = num_of_spaces(prev_selectors[-1])
     for old_select in prev_selectors[:-1]:
@@ -84,7 +84,7 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE):
 
     CSS_FILE.write(selector_string + style_string + end_string)
 
-def compile(filename, CSS_FILE):
+def compile(filename, CSS_FILE, minified):
     num_selectors = 0
     prev_line = None
     prev_spaces = 0
@@ -102,13 +102,13 @@ def compile(filename, CSS_FILE):
             if is_selector(line):
 #                    print('i am ' + line + ' before me was a ' + str(prev_line) + ' and my prev selects are ' + str(prev_selectors))
                 if (prev_line == 'style' or prev_line == 'blank') and len(prev_selectors) > 0:
-                    write_css_dec(prev_selectors, prev_styles, CSS_FILE)
+                    write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified)
                     prev_styles = []
                 selector_string = line[:-2]
                 prev_selectors.append(selector_string)
                 prev_line = 'selector'
             elif line == '\n':
-                write_css_dec(prev_selectors, prev_styles, CSS_FILE)
+                write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified)
                 prev_selectors = []
                 prev_styles = []
                 prev_line = 'blank'
@@ -119,7 +119,7 @@ def compile(filename, CSS_FILE):
     if prev_selectors and prev_styles:
         if not prev_styles[-1].endswith('\n'):
             prev_styles[-1] = prev_styles[-1] + '\n'
-        write_css_dec(prev_selectors, prev_styles, CSS_FILE)
+        write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified)
 
 def parse_main(main_file):
     global custom_vars
@@ -141,8 +141,9 @@ def parse_main(main_file):
 
 def handle_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m','--main_file', help='Your main file which imports your individual styling files (default main.pyle)', type=str, default="main.pyle")
+    parser.add_argument('-f','--main_file', help='Your main file which imports your individual styling files (default main.pyle)', type=str, default="main.pyle")
     parser.add_argument('-c', '--css_file', help='The name of the css file to write to (default style.css)', type=str, default="style.css")
+    parser.add_argument('-m', '--minified', help='create minified file', type=bool, default=False)
     args = parser.parse_args()
 
     return args
@@ -153,7 +154,7 @@ def main():
     CSS_FILE = open(args.css_file, 'w')
 
     for pyle_file in parse_main(args.main_file):
-        compile(pyle_file, CSS_FILE)
+        compile(pyle_file, CSS_FILE, args.minified)
 
     CSS_FILE.close()
 
