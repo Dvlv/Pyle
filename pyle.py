@@ -49,20 +49,38 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
             my_spaces = num_of_spaces(selector)
             width = selector.strip().split()[1]
             if width == 'mobile':
-                selector = (' '*my_spaces) + '@media (max-width: 420px)'
+                if minified:
+                    selector = '@media(max-width:420px)'
+                else:
+                    selector = (' '*my_spaces) + '@media (max-width: 420px)'
             elif width == 'tablet':
-                selector = (' '*my_spaces) + '@media (max-width: 800px)'
+                if minified:
+                    selector = '@media(max-width:800px)'
+                else:
+                    selector = (' '*my_spaces) + '@media (max-width: 800px)'
             elif width.isdigit():
-                selector = (' '*my_spaces) + '@media (max-width: ' + width +'px)'
-            selector_string = selector.strip() + ' {\n ' + selector_string
+                if minified:
+                    selector = '@media(max-width:' + width + 'px)'
+                else:
+                    selector = (' '*my_spaces) + '@media (max-width: ' + width + 'px)'
+            if minified:
+                selector_string = selector.strip() + '{' + selector_string
+            else:
+                selector_string = selector.strip() + ' {\n ' + selector_string
             double_close = True
         elif selector.strip().startswith('&') or selector.strip().startswith(':'):
             noAmp = selector.strip().replace('&','')
             selector_string += noAmp
         else:
-            selector_string = selector_string + ' ' + selector.strip()
+            if minified and len(selector_string) > 0 and selector_string[-1] == '{':
+                selector_string = selector_string + selector.strip()
+            else:
+                selector_string = selector_string + ' ' + selector.strip()
     selector_string = selector_string.strip()
-    selector_string += ' {\n'
+    if minified:
+        selector_string += '{'
+    else:
+        selector_string += ' {\n'
 
     #print style chain
     corrected_styles = []
