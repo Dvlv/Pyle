@@ -64,14 +64,16 @@ Then you can just run
 `./pyle.py`
 
 ###Optional Arguments
-- `-m <filename>.pyle` The name of your main file (with all of your imports, defaults to `main.pyle`)
-- `-c <filename>.css` custom output file for the css (defaults to style.css)
+- `-f <filename>.pyle` The name of your main file (with all of your imports, defaults to `main.pyle`)
+- `-c <filename>.css` custom output file for the css (defaults to `style.css`)
+- `-m` create minified css
 
 ####Examples 
 - `python3 pyle.py` Imports stylesheets and variables listed in `main.pyle` and writes to `style.css`
-- `python3 pyle.py -m imports.pyle` Imports stylesheets and variables listed in `imports.pyle` and writes to `style.css`
+- `python3 pyle.py -f imports.pyle` Imports stylesheets and variables listed in `imports.pyle` and writes to `style.css`
 - `python3 pyle.py -c site.css` Imports stylesheets and variables in `main.pyle` (as default) and writes to `site.css`
-- `python3 pyle.py -m imports.pyle -c site.css` Imports stylesheets and variables in `imports.pyle` and writes to `site.css`
+- `python3 pyle.py -f imports.pyle -c site.css` Imports stylesheets and variables in `imports.pyle` and writes to `site.css`
+- `python3 pyle.py -m` Imports stylesheets and variables listed in `main.pyle` and creates a minified css file `style.css`
 
 ##Advanced syntax
 ####Media queries
@@ -96,5 +98,4 @@ above, `bright-yellow` and `darker-yellow` can both use the `@yellow` variable, 
 ###TODO
 - Loops
 - Animation keyframe creating
-- Minified CSS
 - Proper error handling
