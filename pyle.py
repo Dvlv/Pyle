@@ -90,10 +90,16 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
             style_value = style[len(halves.group(0)):-1]
             if style_value in custom_vars:
                 style_value = custom_vars[style_value]
-            style_type = '  ' + halves.group(0).strip()
-            if double_close:
+            if minified:
+                style_type = halves.group(0).strip()
+            else:
+                style_type = '  ' + halves.group(0).strip()
+            if double_close and not minified:
                 style_type = '  ' + style_type
-            corrected_styles.append(style_type + ': ' + style_value + ';\n')
+            if minified:
+                corrected_styles.append(style_type + ':' + style_value + ';')
+            else:
+                corrected_styles.append(style_type + ': ' + style_value + ';\n')
 
     style_string = ''.join(corrected_styles)
     end_string = '}\n'
