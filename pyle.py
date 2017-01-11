@@ -15,6 +15,12 @@ def is_selector(line):
     else:
         return False
 
+def is_comment(line):
+    if line.startswith(';'):
+        return True
+    else:
+        return False
+
 def num_of_spaces(line):
     spaces = re.search(SPACES_REGEX, line)
     if spaces.group(0) is not None:
@@ -125,6 +131,10 @@ def compile(filename, CSS_FILE, minified):
                 indent_width = num_of_spaces(line)
             if first_line:
                 first_line = False
+
+            if is_comment(line):
+                # dont need to put these in the css i don't imagine
+                continue
 
             if is_selector(line):
 #                    print('i am ' + line + ' before me was a ' + str(prev_line) + ' and my prev selects are ' + str(prev_selectors))
