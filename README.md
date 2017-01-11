@@ -96,7 +96,6 @@ def yellow #dddd00
 above, `bright-yellow` and `darker-yellow` can both use the `@yellow` variable, but its replacement will be different in each
 
 ###TODO
-- Comments
 - Commas
 - Loops
 - Animation keyframe creating
