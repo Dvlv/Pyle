@@ -10,16 +10,10 @@ SPACES_REGEX = re.compile('^\s*')
 custom_vars = {}
 
 def is_selector(line):
-    if line.endswith(COLON):
-        return True
-    else:
-        return False
+    return line.endswith(COLON)
 
 def is_comment(line):
-    if line.startswith(';'):
-        return True
-    else:
-        return False
+    return line.startswith(';')
 
 def num_of_spaces(line):
     spaces = re.search(SPACES_REGEX, line)
