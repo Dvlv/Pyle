@@ -24,26 +24,35 @@ def num_of_spaces(line):
 
     return num_spaces
 
-def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
-  #remove prev selectors with equal or more indents
+def create_selector_string(prev_selectors, minified):
+    comma = False
+    #remove prev selectors with more indents
     my_spaces = num_of_spaces(prev_selectors[-1])
-    for old_select in prev_selectors[:-1]:
-        if num_of_spaces(old_select) >= my_spaces:
+    #print(prev_selectors)
+    for index, old_select in enumerate(prev_selectors[:-1]):
+        if num_of_spaces(old_select) > my_spaces:
             prev_selectors.remove(old_select)
+        elif num_of_spaces(old_select) == my_spaces:
+            prev_selectors[index] += ','
+            comma = True
+
 
     #now fix double nesting
     prev_spaces = 999999999999
+    #print (prev_selectors)
     for selector in reversed(prev_selectors):
         my_spaces = num_of_spaces(selector)
-        if my_spaces < prev_spaces:
+        if my_spaces <= prev_spaces:
             prev_spaces = my_spaces
         else:
             prev_selectors.remove(selector)
-         #   print(my_spaces < prev_spaces)
+            #print(my_spaces < prev_spaces)
 
     #print selector chain
     selector_string = ''
     double_close = False
+    before_comma = ''
+    at_comma = ''
     for selector in prev_selectors:
         if selector.strip().startswith('@media'):
             my_spaces = num_of_spaces(selector)
@@ -71,13 +80,34 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
         elif selector.strip().startswith('&') or selector.strip().startswith(':'):
             noAmp = selector.strip().replace('&','')
             selector_string += noAmp
+        elif selector.strip().endswith(','):
+            before_comma = selector_string[:]
+            at_comma = selector.strip()
+            print (before_comma, at_comma)
         else:
             selector_string = selector_string + ' ' + selector.strip()
+
     selector_string = selector_string.strip()
+
+    if len(before_comma) > 0:
+        if minified:
+            selector_string += ','
+        else:
+            selector_string += ',\n'
+
+        selector_string += before_comma.strip() + ' ' + at_comma[:-1]
+
     if minified:
         selector_string += '{'
     else:
         selector_string += ' {\n'
+
+    return selector_string, double_close
+
+
+def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
+
+    selector_string, double_close = create_selector_string(prev_selectors, minified)
 
     #print style chain
     corrected_styles = []
