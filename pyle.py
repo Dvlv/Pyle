@@ -24,6 +24,48 @@ def num_of_spaces(line):
 
     return num_spaces
 
+def create_hierarchy(prev_selectors):
+    hierarchy_list = [[num_of_spaces(prev_selector), prev_selector] for prev_selector in prev_selectors]
+    hierarchy_list = sorted(hierarchy_list, key=lambda x: x[0])
+
+    hierarchy_dict = {}
+    for item in hierarchy_list:
+        hierarchy_dict[item[0]] = []
+
+    for item in hierarchy_list:
+        hierarchy_dict[item[0]].append(item[1].strip())
+
+    comma = False
+    comma_nest_count = 0
+
+    for item in hierarchy_dict.values():
+        if len(item) > 1:
+            comma = True
+            if len(item) > comma_nest_count:
+                comma_nest_count = len(item)
+
+    #print(hierarchy_dict.values())
+
+
+    if comma:
+        comma_index = 0
+        selector_string = ''
+        while comma_index < comma_nest_count:
+            for selector in hierarchy_dict.values():
+                if len(selector) > 1:
+                    selector_string += selector[comma_index] + ' '
+                else:
+                    selector_string += selector[0] + ' '
+
+            selector_string = selector_string.strip()
+            if comma_index == (comma_nest_count - 1):
+                selector_string += '{'
+            else:
+                selector_string += ',\n'
+            comma_index += 1
+
+    print(selector_string)
+
 def create_selector_string(prev_selectors, minified):
     comma = False
     #remove prev selectors with more indents
@@ -49,6 +91,7 @@ def create_selector_string(prev_selectors, minified):
             #print(my_spaces < prev_spaces)
 
     #print selector chain
+    #print(prev_selectors)
     selector_string = ''
     double_close = False
     before_comma = ''
@@ -83,7 +126,7 @@ def create_selector_string(prev_selectors, minified):
         elif selector.strip().endswith(','):
             before_comma = selector_string[:]
             at_comma = selector.strip()
-            print (before_comma, at_comma)
+            #print (before_comma, at_comma)
         else:
             selector_string = selector_string + ' ' + selector.strip()
 
