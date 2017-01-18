@@ -36,35 +36,26 @@ def create_hierarchy(prev_selectors):
         hierarchy_dict[item[0]].append(item[1].strip())
 
     comma = False
-    comma_nest_count = 0
+    comma_indexes = {}
 
-    for item in hierarchy_dict.values():
+    for index, item in hierarchy_dict.items():
         if len(item) > 1:
             comma = True
-            if len(item) > comma_nest_count:
-                comma_nest_count = len(item)
+            comma_indexes[index] = len(item)
 
-    #print(hierarchy_dict.values())
+    # we have a dict of {spaces:number_of_selectors}
+    # traverse down the tree, increment the first until it's out of values
+    dict_indexes = comma_indexes.keys()
+    progress_dict = {}
+    for index in dict_indexes:
+        progress_dict[index] = 0
 
+    # a progress dict holds where we have to go next in the tree.
 
     if comma:
-        comma_index = 0
-        selector_string = ''
-        while comma_index < comma_nest_count:
-            for selector in hierarchy_dict.values():
-                if len(selector) > 1:
-                    selector_string += selector[comma_index] + ' '
-                else:
-                    selector_string += selector[0] + ' '
+        pass
 
-            selector_string = selector_string.strip()
-            if comma_index == (comma_nest_count - 1):
-                selector_string += '{'
-            else:
-                selector_string += ',\n'
-            comma_index += 1
-
-    print(selector_string)
+    print(comma_indexes)
 
 def create_selector_string(prev_selectors, minified):
     comma = False
