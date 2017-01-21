@@ -73,7 +73,7 @@ Then you can just run
 - `python3 pyle.py -f imports.pyle` Imports stylesheets and variables listed in `imports.pyle` and writes to `style.css`
 - `python3 pyle.py -c site.css` Imports stylesheets and variables in `main.pyle` (as default) and writes to `site.css`
 - `python3 pyle.py -f imports.pyle -c site.css` Imports stylesheets and variables in `imports.pyle` and writes to `site.css`
-- `python3 pyle.py -m` Imports stylesheets and variables listed in `main.pyle` and creates a minified css file `style.css`
+- `python3 pyle.py -m 1` Imports stylesheets and variables listed in `main.pyle` and creates a minified css file `style.css`
 
 ##Advanced syntax
 ####Media queries
