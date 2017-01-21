@@ -83,7 +83,7 @@ Then you can just run
 - `::before:` and `::after:` allow for before and after pseudo-elements
 
 ####Commas
-- Use a comma instead of a colon, and make your next selector(s)at the same indent width
+- Use a comma instead of a colon, and make your next selector(s) at the same indent width
 - e.g.
 
 ```
