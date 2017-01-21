@@ -78,6 +78,7 @@ def selector_list_from_tree(struct):
 def create_selector_string(prev_selectors, minified):
     #remove prev selectors with more indents
     my_spaces = num_of_spaces(prev_selectors[-1])
+
     for index, old_select in enumerate(prev_selectors[:-1]):
         if num_of_spaces(old_select) >= my_spaces and not old_select.endswith(','):
             prev_selectors.remove(old_select)
@@ -85,6 +86,7 @@ def create_selector_string(prev_selectors, minified):
     #now fix double nesting
     prev_spaces = 999999999999
     list_length = len(prev_selectors)
+
     for index, selector in enumerate(reversed(prev_selectors)):
         my_spaces = num_of_spaces(selector)
         offset = index + 1
@@ -112,8 +114,10 @@ def create_selector_string(prev_selectors, minified):
                     #already written media declaration, so indent and skip
                     selector_string = selector_string.replace ('\n', '\n  ')
                     continue
+
                 my_spaces = num_of_spaces(selector)
                 width = selector.strip().split()[1]
+
                 if width == 'mobile':
                     if minified:
                         selector = '@media(max-width:420px)'
@@ -129,6 +133,7 @@ def create_selector_string(prev_selectors, minified):
                         selector = '@media(max-width:' + width + 'px)'
                     else:
                         selector = (' '*my_spaces) + '@media (max-width: ' + width + 'px)'
+
                 if minified:
                     selector_string = selector.strip() + '{' + selector_string.strip()
                 else:
@@ -136,7 +141,9 @@ def create_selector_string(prev_selectors, minified):
                         selector_string = selector.strip() + ' {\n' + selector_string
                     else:
                         selector_string = selector.strip() + ' {\n  ' + selector_string
+
                 double_close = True
+
             elif selector.strip().startswith('&') or selector.strip().startswith(':'):
                 noAmp = selector.strip().replace('&','')
                 selector_string += noAmp
@@ -145,6 +152,7 @@ def create_selector_string(prev_selectors, minified):
                     selector_string = selector_string + selector.strip()
                 else:
                     selector_string = selector_string + ' ' + selector.strip()
+
         if num_selector_strings > 1:
             if minified:
                 selector_string = selector_string.strip() + ','
@@ -163,8 +171,6 @@ def create_selector_string(prev_selectors, minified):
             selector_string = selector_string + ' {\n'
 
     return selector_string, double_close
-        #return selector_string, double_close
-
 
 def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
 
@@ -210,27 +216,28 @@ def compile(filename, CSS_FILE, minified):
     indent_width = 0
     prev_selectors = []
     prev_styles = []
+
     with open(filename, 'r') as open_file:
         for line in open_file:
             if not first_line and indent_width == 0:
                 indent_width = num_of_spaces(line)
+
             if first_line:
                 first_line = False
 
             if is_comment(line):
-                # dont need to put these in the css i don't imagine
                 continue
 
             if is_selector(line):
-#                    print('i am ' + line + ' before me was a ' + str(prev_line) + ' and my prev selects are ' + str(prev_selectors))
                 if (prev_line == 'style' or prev_line == 'blank') and len(prev_selectors) > 0:
                     write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified)
                     prev_styles = []
-                #keep comma, strip newline and colon
+
                 if line.endswith(COMMA):
                     selector_string = line[:-1]
                 else:
                     selector_string = line[:-2]
+
                 prev_selectors.append(selector_string)
                 prev_line = 'selector'
             elif line == '\n':
@@ -245,6 +252,7 @@ def compile(filename, CSS_FILE, minified):
     if prev_selectors and prev_styles:
         if not prev_styles[-1].endswith('\n'):
             prev_styles[-1] = prev_styles[-1] + '\n'
+
         write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified)
 
 def parse_main(main_file):
@@ -254,6 +262,7 @@ def parse_main(main_file):
         for index, line in enumerate(mf, start=1):
             if line.startswith('def'):
                 var_pieces = line.split()
+
                 if len(var_pieces) == 3:
                     custom_vars['@' + str(var_pieces[1])] = str(var_pieces[2])
                 else:
