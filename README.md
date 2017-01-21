@@ -77,7 +77,7 @@ Then you can just run
 
 ##Advanced syntax
 ####Media queries
-- `@media mobile:`, `@media tablet:`, `@media <number>:` allow for mobile (max-width 420) and tablet (max-width 800) selectors, or a custom number.
+- `@media mobile:`, `@media tablet:`, `@media <number>:` allow for mobile (`max-width 420px`) and tablet (`max-width 800px`) selectors, or a custom number.
 
 ####Before and after
 - `::before:` and `::after:` allow for before and after pseudo-elements
