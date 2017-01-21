@@ -146,10 +146,16 @@ def create_selector_string(prev_selectors, minified):
                 else:
                     selector_string = selector_string + ' ' + selector.strip()
         if num_selector_strings > 1:
-            selector_string = selector_string.strip() + ', \n'
+            if minified:
+                selector_string = selector_string.strip() + ','
+            else:
+                selector_string = selector_string.strip() + ', \n'
 
     if num_selector_strings > 1:
-        selector_string = selector_string.strip()[:-1] + ' {\n'
+        if minified:
+            selector_string = selector_string.strip()[:-1] + '{'
+        else:
+            selector_string = selector_string.strip()[:-1] + ' {\n'
     else:
         if minified:
             selector_string += '{'
