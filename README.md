@@ -66,7 +66,7 @@ Then you can just run
 ###Optional Arguments
 - `-f <filename>.pyle` The name of your main file (with all of your imports, defaults to `main.pyle`)
 - `-c <filename>.css` custom output file for the css (defaults to `style.css`)
-- `-m` create minified css
+- `-m 1` create minified css
 
 ####Examples 
 - `python3 pyle.py` Imports stylesheets and variables listed in `main.pyle` and writes to `style.css`
