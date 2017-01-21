@@ -82,6 +82,27 @@ Then you can just run
 ####Before and after
 - `::before:` and `::after:` allow for before and after pseudo-elements
 
+####Commas
+- Use a comma instead of a colon, and make your next selector(s)at the same indent width
+- e.g.
+
+```
+html:
+    body:
+        div,
+        span:
+            font-weight bold
+```
+
+Becomes
+
+```
+html body div,
+html body span {
+    font-weight: bold;
+}
+```
+
 ####Defining variables
 - `def orange #ff6600` allows you to define a variable, accessed by `@orange` in your pyle stylesheets, which will be replaced with `#ff6600` in the generated css file.
 - The file is read top-down, so if you need to override styles between stylesheets simply redefine them before the `@import`
@@ -96,7 +117,6 @@ def yellow #dddd00
 above, `bright-yellow` and `darker-yellow` can both use the `@yellow` variable, but its replacement will be different in each
 
 ###TODO
-- Commas
 - Loops
 - Animation keyframe creating
 - Proper error handling
