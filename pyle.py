@@ -2,15 +2,17 @@
 import sys
 import re
 import argparse
+import collections
 
 COLON = ':\n'
+COMMA = ',\n'
 STYLE_REGEX = re.compile('\s*[\w\-]+\s')
 SPACES_REGEX = re.compile('^\s*')
 
 custom_vars = {}
 
 def is_selector(line):
-    return line.endswith(COLON)
+    return line.endswith(COLON) or line.endswith(COMMA)
 
 def is_comment(line):
     return line.startswith(';')
@@ -24,119 +26,138 @@ def num_of_spaces(line):
 
     return num_spaces
 
-def create_hierarchy(prev_selectors):
+def create_selector_list(prev_selectors):
     hierarchy_list = [[num_of_spaces(prev_selector), prev_selector] for prev_selector in prev_selectors]
     hierarchy_list = sorted(hierarchy_list, key=lambda x: x[0])
 
-    hierarchy_dict = {}
-    for item in hierarchy_list:
-        hierarchy_dict[item[0]] = []
+    reversed_list = list(reversed(hierarchy_list))
 
-    for item in hierarchy_list:
-        hierarchy_dict[item[0]].append(item[1].strip())
+    tree = build_tree(reversed_list)
 
-    comma = False
-    comma_indexes = {}
+    selector_list = selector_list_from_tree(tree)
 
-    for index, item in hierarchy_dict.items():
-        if len(item) > 1:
-            comma = True
-            comma_indexes[index] = len(item)
+    return selector_list
 
-    # we have a dict of {spaces:number_of_selectors}
-    # traverse down the tree, increment the first until it's out of values
-    dict_indexes = comma_indexes.keys()
-    progress_dict = {}
-    for index in dict_indexes:
-        progress_dict[index] = 0
 
-    # a progress dict holds where we have to go next in the tree.
+def build_tree(hierarchy):
+    struct = {}
+    current_index = hierarchy[0][0]
+    prev_text = ''
 
-    if comma:
-        pass
+    for item in hierarchy:
+        index = item[0]
+        text = item[1]
 
-    print(comma_indexes)
+        if index < current_index:
+            old_struct = struct.copy()
+            struct = {}
+            struct[text] = old_struct
+        elif index == current_index and prev_text:
+            struct[text] = struct[prev_text].copy()
+        else:
+            struct[text] = {}
+
+        prev_text = text
+        current_index = index
+
+    return struct
+
+def selector_list_from_tree(struct):
+
+    def paths(tree, cur=()):
+        if not tree:
+            yield cur
+        else:
+            for n, s in tree.items():
+                for path in paths(s, cur+(n,)):
+                    yield path
+
+    return list(paths(struct))
+
 
 def create_selector_string(prev_selectors, minified):
-    comma = False
     #remove prev selectors with more indents
     my_spaces = num_of_spaces(prev_selectors[-1])
-    #print(prev_selectors)
     for index, old_select in enumerate(prev_selectors[:-1]):
-        if num_of_spaces(old_select) > my_spaces:
+        if num_of_spaces(old_select) >= my_spaces and not old_select.endswith(','):
             prev_selectors.remove(old_select)
-        elif num_of_spaces(old_select) == my_spaces:
-            prev_selectors[index] += ','
-            comma = True
-
 
     #now fix double nesting
     prev_spaces = 999999999999
-    #print (prev_selectors)
-    for selector in reversed(prev_selectors):
+    list_length = len(prev_selectors)
+    for index, selector in enumerate(reversed(prev_selectors)):
         my_spaces = num_of_spaces(selector)
-        if my_spaces <= prev_spaces:
+        offset = index + 1
+        original_index = list_length - offset
+
+        if my_spaces < prev_spaces:
             prev_spaces = my_spaces
         else:
-            prev_selectors.remove(selector)
-            #print(my_spaces < prev_spaces)
+            if not selector.endswith(','):
+                del prev_selectors[original_index]
 
-    #print selector chain
-    #print(prev_selectors)
     selector_string = ''
     double_close = False
-    before_comma = ''
-    at_comma = ''
-    for selector in prev_selectors:
-        if selector.strip().startswith('@media'):
-            my_spaces = num_of_spaces(selector)
-            width = selector.strip().split()[1]
-            if width == 'mobile':
+
+    prev_selectors_list = create_selector_list(prev_selectors)
+    num_selector_strings = len(prev_selectors_list)
+
+    for prev_selectors in prev_selectors_list:
+        for selector in prev_selectors:
+            if selector.endswith(','):
+                selector = selector[:-1]
+
+            if selector.strip().startswith('@media'):
+                if double_close:
+                    #already written media declaration, so indent and skip
+                    selector_string = selector_string.replace ('\n', '\n  ')
+                    continue
+                my_spaces = num_of_spaces(selector)
+                width = selector.strip().split()[1]
+                if width == 'mobile':
+                    if minified:
+                        selector = '@media(max-width:420px)'
+                    else:
+                        selector = (' '*my_spaces) + '@media (max-width: 420px)'
+                elif width == 'tablet':
+                    if minified:
+                        selector = '@media(max-width:800px)'
+                    else:
+                        selector = (' '*my_spaces) + '@media (max-width: 800px)'
+                elif width.isdigit():
+                    if minified:
+                        selector = '@media(max-width:' + width + 'px)'
+                    else:
+                        selector = (' '*my_spaces) + '@media (max-width: ' + width + 'px)'
                 if minified:
-                    selector = '@media(max-width:420px)'
+                    selector_string = selector.strip() + '{' + selector_string.strip()
                 else:
-                    selector = (' '*my_spaces) + '@media (max-width: 420px)'
-            elif width == 'tablet':
-                if minified:
-                    selector = '@media(max-width:800px)'
-                else:
-                    selector = (' '*my_spaces) + '@media (max-width: 800px)'
-            elif width.isdigit():
-                if minified:
-                    selector = '@media(max-width:' + width + 'px)'
-                else:
-                    selector = (' '*my_spaces) + '@media (max-width: ' + width + 'px)'
-            if minified:
-                selector_string = selector.strip() + '{' + selector_string.strip()
+                    if num_selector_strings > 1:
+                        selector_string = selector.strip() + ' {\n' + selector_string
+                    else:
+                        selector_string = selector.strip() + ' {\n  ' + selector_string
+                double_close = True
+            elif selector.strip().startswith('&') or selector.strip().startswith(':'):
+                noAmp = selector.strip().replace('&','')
+                selector_string += noAmp
             else:
-                selector_string = selector.strip() + ' {\n ' + selector_string
-            double_close = True
-        elif selector.strip().startswith('&') or selector.strip().startswith(':'):
-            noAmp = selector.strip().replace('&','')
-            selector_string += noAmp
-        elif selector.strip().endswith(','):
-            before_comma = selector_string[:]
-            at_comma = selector.strip()
-            #print (before_comma, at_comma)
-        else:
-            selector_string = selector_string + ' ' + selector.strip()
+                if not selector_string or selector_string[-1] == '\n':
+                    selector_string = selector_string + selector.strip()
+                else:
+                    selector_string = selector_string + ' ' + selector.strip()
+        if num_selector_strings > 1:
+            selector_string = selector_string.strip() + ', \n'
 
-    selector_string = selector_string.strip()
-
-    if len(before_comma) > 0:
-        if minified:
-            selector_string += ','
-        else:
-            selector_string += ',\n'
-
-        selector_string += before_comma.strip() + ' ' + at_comma[:-1]
-
-    if minified:
-        selector_string += '{'
+    if num_selector_strings > 1:
+        selector_string = selector_string.strip()[:-1] + ' {\n'
     else:
-        selector_string += ' {\n'
+        if minified:
+            selector_string += '{'
+        else:
+            selector_string = selector_string + ' {\n'
 
     return selector_string, double_close
+        #return selector_string, double_close
 
 
 def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
@@ -199,7 +220,11 @@ def compile(filename, CSS_FILE, minified):
                 if (prev_line == 'style' or prev_line == 'blank') and len(prev_selectors) > 0:
                     write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified)
                     prev_styles = []
-                selector_string = line[:-2]
+                #keep comma, strip newline and colon
+                if line.endswith(COMMA):
+                    selector_string = line[:-1]
+                else:
+                    selector_string = line[:-2]
                 prev_selectors.append(selector_string)
                 prev_line = 'selector'
             elif line == '\n':
