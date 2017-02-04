@@ -41,7 +41,7 @@ html body span.red {
 
 See the examples folder for detailed examples
 
-To compile the examples, use `python3 pyle.py -f examples/main.pyle -c examples/style.css`
+To compile the examples, use `python3 pyle/pyle.py -f examples/main.pyle -c examples/style.css`
 
 ##Importing
 - Pyle requires a main.pyle (or equivalent) file with a list of .pyle files to parse
@@ -55,6 +55,8 @@ To compile the examples, use `python3 pyle.py -f examples/main.pyle -c examples/
 - Include the generated css file in your html as usual
 
 ##Running
+`cd` into the directory with `pyle.py` in it. 
+
 `python3 pyle.py`
 
 Or mark it as executable `chmod +x pyle.py`
@@ -117,6 +119,13 @@ def yellow #dddd00
 @import darker-yellow.pyle
 ```
 above, `bright-yellow` and `darker-yellow` can both use the `@yellow` variable, but its replacement will be different in each
+
+##Running tests
+Tests are written with `pytest`.
+
+Install with `sudo python3 -m pip install pytest`. 
+
+cd into `tests/` and run `pytest -v`.
 
 ###TODO
 - Loops
