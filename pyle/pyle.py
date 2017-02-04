@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import os
 import re
 import argparse
 import collections
@@ -36,7 +37,7 @@ def create_selector_list(prev_selectors):
 
     selector_list = selector_list_from_tree(tree)
 
-    return selector_list
+    return list(sorted(selector_list))
 
 
 def build_tree(hierarchy):
@@ -208,7 +209,7 @@ def write_css_dec(prev_selectors, prev_styles, CSS_FILE, minified):
 
     CSS_FILE.write(selector_string + style_string + end_string)
 
-def compile(filename, CSS_FILE, minified):
+def pyle_compile(filename, CSS_FILE, minified):
     num_selectors = 0
     prev_line = None
     prev_spaces = 0
@@ -258,6 +259,8 @@ def compile(filename, CSS_FILE, minified):
 def parse_main(main_file):
     global custom_vars
 
+    main_path = os.path.dirname(main_file)
+
     with open(main_file, 'r') as mf:
         for index, line in enumerate(mf, start=1):
             if line.startswith('def'):
@@ -272,13 +275,25 @@ def parse_main(main_file):
                     else:
                         print('skipping empty def on line {}, please remove'.format(index))
             elif line.startswith('@import'):
-                yield line.split()[1]
+                yield os.path.join(main_path, line.split()[1])
 
 def handle_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f','--main_file', help='Your main file which imports your individual styling files (default main.pyle)', type=str, default="main.pyle")
-    parser.add_argument('-c', '--css_file', help='The name of the css file to write to (default style.css)', type=str, default="style.css")
-    parser.add_argument('-m', '--minified', help='create minified file', type=bool, default=False)
+    parser.add_argument('-f',
+                        '--main_file',
+                        help='Your main file which imports your individual styling files (default main.pyle)',
+                        type=str,
+                        default="main.pyle")
+    parser.add_argument('-c',
+                        '--css_file',
+                        help='The name of the css file to write to (default style.css)',
+                        type=str,
+                        default="style.css")
+    parser.add_argument('-m',
+                        '--minified',
+                        help='create minified file',
+                        type=bool,
+                        default=False)
     args = parser.parse_args()
 
     return args
@@ -286,12 +301,12 @@ def handle_args():
 def main():
     args = handle_args()
 
-    CSS_FILE = open(args.css_file, 'w')
+    css_file = open(args.css_file, 'w')
 
     for pyle_file in parse_main(args.main_file):
-        compile(pyle_file, CSS_FILE, args.minified)
+        pyle_compile(pyle_file, css_file, args.minified)
 
-    CSS_FILE.close()
+    css_file.close()
 
 if __name__ == '__main__':
     main()

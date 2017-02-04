@@ -1,3 +1,5 @@
 def orange #ff6600
 def yellow #ffff00
-@import examples/testComma.pyle
+@import test.pyle
+@import test2.pyle
+;@import examples/testComma.pyle
